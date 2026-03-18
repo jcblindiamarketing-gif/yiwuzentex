@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #10797c;
+  --secondary: #f5f3f3;
+  --accent: #48d1cc;
+  --grey-variant: #585858;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-secondary: #f5f5f5;
+}
+
+::selection {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+body {
+  font-family: var(--font-urbanist);
+}
+
+/* For WebKit-based browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust width as needed */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0b8688; /* Scrollbar thumb color */
+  border-radius: 10px; /* Rounded edges */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0b9c9e; /* Darker shade on hover */
+}
+
+/* APP CSS */
+.app__container {
+  @apply w-full px-20 max-md:px-5 max-sm:px-6 mx-auto;
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.grey-variant {
+  color: var(--grey-variant);
+}
+
+.grey-variant-bg {
+  background-color: var(--grey-variant);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.accent-sec {
+  color: var(--primary);
+}
+
+.portable-text {
+  @apply flex flex-col gap-4 text-[#585858] text-lg my-10;
+}
+
+.portable-text h1 {
+  @apply text-4xl font-semibold text-[#10797C] leading-12 text-center;
+}
+
+.portable-text h2 {
+  @apply text-3xl font-semibold text-[#10797C] leading-12;
+}
+
+
+
+.portable-text h3 {
+  @apply text-2xl font-semibold text-[#10797C] leading-12;
+}
+
+
+.portable-text h4 {
+  @apply text-xl font-semibold text-[#10797C] ;
+}
+
+.portable-text h5 {
+  @apply text-lg font-semibold text-[#10797C] ;
+}
+
+
+
+.portable-text a{
+  @apply text-[#10797C] underline;
+}
+
+.portable-text ul {
+  @apply flex flex-col gap-2 list-disc list-inside;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #fff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.fake-masonry {
+  --gap: clamp(1rem, 5vmin, 2rem);
+  columns: 220px;
+  gap: var(--gap);
+  width: 96%;
+  max-width: 960px;
+  margin: 5rem auto;
+}
+
+.fake-masonry > * {
+  break-inside: avoid;
+  margin-bottom: var(--gap);
+}
+
+/* In your globals.css or inside Carousel.module.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
