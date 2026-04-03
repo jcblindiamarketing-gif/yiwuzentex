@@ -8,3 +8,4 @@ export const client = createClient({
   apiVersion,
   useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
 })
+console.log("ENV CHECK:", process.env.NEXT_PUBLIC_SANITY_PROJECT_ID)
