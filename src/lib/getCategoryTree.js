@@ -40,38 +40,58 @@ const query = groq`
 // }
 
 export async function getCategoryTree() {
-    const categories = await client.fetch(query);
+  const categories = await client.fetch(query);
 
-    const categoryMap = new Map();
+  const categoryMap = new Map();
 
-    // First, map categories with empty sublinks and a placeholder for fullSlug
-    categories.forEach(cat => {
-        categoryMap.set(cat._id, { ...cat, sublinks: [], fullSlug: "" });
+  // 🔧 helper to clean slug (-2 issue)
+  const cleanSlug = (slug) => slug?.replace(/-\d+$/, "");
+
+  // Step 1: prepare nodes
+  categories.forEach((cat) => {
+    categoryMap.set(cat._id, {
+      ...cat,
+      sublinks: [],
+      fullSlug: "",
+      newTab: false,
     });
+  });
 
-    const roots = [];
+  const roots = [];
 
-    // Build tree and fullSlug paths
-    categories.forEach(cat => {
-        const node = categoryMap.get(cat._id);
+  // Step 2: build tree
+  categories.forEach((cat) => {
+  const node = categoryMap.get(cat._id);
 
-        if (cat.parent) {
-            const parent = categoryMap.get(cat.parent);
-            if (parent) {
-                // Push current node as sublink of parent
-                parent.sublinks.push(node);
+  const isExternal = cat.slug?.startsWith("http");
 
-                // Construct fullSlug by appending current slug to parent's fullSlug
-                node.fullSlug = parent.fullSlug
-                    ? `${parent.fullSlug}/${cat.slug}`
-                    : `/product-segment/${cat.slug}`;
-            }
-        } else {
-            // Root node: fullSlug starts with 'product-segment'
-            node.fullSlug = `/product-segment/${cat.slug}`;
-            roots.push(node);
-        }
-    });
+  // ✅ handle external slug
+  if (isExternal) {
+    node.fullSlug = cat.slug;
+    node.newTab = true;
+  }
 
-    return roots;
+  if (cat.parent) {
+    const parent = categoryMap.get(cat.parent);
+
+    if (parent) {
+      parent.sublinks.push(node);
+
+      // ✅ ONLY build slug if NOT external
+      if (!isExternal) {
+        node.fullSlug = parent.fullSlug
+          ? `${parent.fullSlug}/${cleanSlug(cat.slug)}`
+          : `/product-segment/${cleanSlug(cat.slug)}`;
+      }
+    }
+  } else {
+    if (!isExternal) {
+      node.fullSlug = `/product-segment/${cleanSlug(cat.slug)}`;
+    }
+    roots.push(node);
+  }
+});
+
+  return roots;
 }
+

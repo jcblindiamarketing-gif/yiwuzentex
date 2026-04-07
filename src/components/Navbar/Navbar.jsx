@@ -34,9 +34,15 @@ function DropdownItem({ item }) {
       onMouseLeave={() => setOpenSub(false)}
     >
       <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 cursor-pointer">
-        <Link href={item.fullSlug} className="flex-1">
-          {item.title}
-        </Link>
+      {item.fullSlug?.startsWith('http') ? (
+  <a href={item.fullSlug} target="_blank" rel="noopener noreferrer" className="...">
+    {item.title}
+  </a>
+) : (
+  <Link href={item.fullSlug} className="...">
+    {item.title}
+  </Link>
+)}
         {item.subcategories?.length > 0 && (
           <FaChevronRight className="text-xs ml-2 text-gray-500" />
         )}
@@ -179,42 +185,41 @@ export default function Navbar({ categories }) {
 
       {/* Desktop Navigation */}
       <div className="flex gap-1 items-center max-md:hidden">
-        <ul className="md:flex space-x-2 ">
-          {dynamicNavLinks.map((link, index) => (
-            <Link
-              key={index}
-              className="relative px-4 py-2 rounded-md hover:bg-gray-100 transition duration-200"
-              onMouseEnter={() => setDropdownOpen(link.sublinks ? index : null)}
-              onMouseLeave={() => setDropdownOpen(null)}
-              href={link.fullSlug}
-            >
-              <li className="flex items-center gap-1">
-                {link.title}
-                {link.sublinks && (
-                  <FaChevronDown
-                    className={`text-sm transform transition ${
-                      dropdownOpen === index ? "rotate-180" : "rotate-0"
-                    }`}
-                  />
-                )}
-              </li>
+      <ul className="md:flex space-x-2 ">
+  {dynamicNavLinks.map((link, index) => (
+    <li
+      key={index}
+      className="relative px-4 py-2 rounded-md hover:bg-gray-100 transition duration-200"
+      onMouseEnter={() => setDropdownOpen(link.sublinks ? index : null)}
+      onMouseLeave={() => setDropdownOpen(null)}
+    >
+      <Link href={link.fullSlug} className="flex items-center gap-1">
+        {link.title}
+        {link.sublinks && (
+          <FaChevronDown
+            className={`text-sm transform transition ${
+              dropdownOpen === index ? "rotate-180" : "rotate-0"
+            }`}
+          />
+        )}
+      </Link>
 
-              {/* Dropdown */}
-              <AnimatePresence>
-                {dropdownOpen === index && link.sublinks?.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute left-0"
-                  >
-                    <RecursiveDropdown links={link.sublinks} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </Link>
-          ))}
-        </ul>
+      {/* Dropdown */}
+      <AnimatePresence>
+        {dropdownOpen === index && link.sublinks?.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="absolute left-0"
+          >
+            <RecursiveDropdown links={link.sublinks} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </li>
+  ))}
+</ul>
 
         <Search />
       </div>
