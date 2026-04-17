@@ -12,17 +12,17 @@ import Image from "next/image";
 import images from "@/assets";
 import Search from "../Search/Search";
 
-function SimpleDropdown({ show, sublinks }) {
-  if (!show) return null;
-
-  return (
-    <ul className="absolute top-full left-0 mt-2 bg-white border border-gray-200 shadow-lg rounded-md z-50 min-w-[200px]">
-      {sublinks.map((sublink, index) => (
-        <DropdownItem key={index} item={sublink} />
-      ))}
-    </ul>
-  );
-}
+/* ✅ reusable link (opens in new tab) */
+const NewTabLink = ({ href, children, className }) => (
+  <Link
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={className}
+  >
+    {children}
+  </Link>
+);
 
 function DropdownItem({ item }) {
   const [openSub, setOpenSub] = useState(false);
@@ -34,30 +34,38 @@ function DropdownItem({ item }) {
       onMouseLeave={() => setOpenSub(false)}
     >
       <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 cursor-pointer">
-      {item.fullSlug?.startsWith('http') ? (
-  <a href={item.fullSlug} target="_blank" rel="noopener noreferrer" className="...">
-    {item.title}
-  </a>
-) : (
-  <Link href={item.fullSlug} className="...">
-    {item.title}
-  </Link>
-)}
+        
+        {/* ✅ always open in new tab */}
+        {item.fullSlug?.startsWith("http") ? (
+          <a
+            href={item.fullSlug}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            {item.title}
+          </a>
+        ) : (
+          <NewTabLink href={item.fullSlug} className="w-full">
+            {item.title}
+          </NewTabLink>
+        )}
+
         {item.subcategories?.length > 0 && (
           <FaChevronRight className="text-xs ml-2 text-gray-500" />
         )}
       </div>
 
       {item.subcategories && openSub && (
-        <ul className="absolute left-full top-0 mt-0 ml-1 bg-white border border-gray-200 shadow-lg rounded-md z-50 min-w-[200px]">
+        <ul className="absolute left-full top-0 ml-1 bg-white border shadow-lg rounded-md z-50 min-w-[200px]">
           {item.subcategories.map((subItem, subIndex) => (
             <li key={subIndex} className="hover:bg-gray-100">
-              <Link
+              <NewTabLink
                 href={subItem.fullSlug}
                 className="block px-4 py-2 text-sm text-gray-700"
               >
                 {subItem.title}
-              </Link>
+              </NewTabLink>
             </li>
           ))}
         </ul>
@@ -79,9 +87,7 @@ const RecursiveDropdown = ({ links, depth = 0 }) => {
 
   const handleMouseLeave = () => {
     closeTimeoutRef.current = setTimeout(
-      () => {
-        setOpenIndex(null);
-      },
+      () => setOpenIndex(null),
       2000 * (depth + 1)
     );
   };
@@ -100,9 +106,12 @@ const RecursiveDropdown = ({ links, depth = 0 }) => {
           onMouseLeave={handleMouseLeave}
         >
           <div className="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-            <Link href={sublink?.fullSlug || "#"} className="w-full">
+            
+            {/* ✅ fixed */}
+            <NewTabLink href={sublink?.fullSlug || "#"} className="w-full">
               {sublink?.title}
-            </Link>
+            </NewTabLink>
+
             {sublink?.sublinks?.length > 0 && (
               <FaChevronRight className="ml-2 text-xs text-gray-500" />
             )}
@@ -123,7 +132,7 @@ const RecursiveDropdown = ({ links, depth = 0 }) => {
   );
 };
 
-const RecursiveMobileDropdown = ({ links, depth = 0 }) => {
+const RecursiveMobileDropdown = ({ links }) => {
   const [open, setOpen] = useState({});
 
   const toggle = (i) => setOpen((prev) => ({ ...prev, [i]: !prev[i] }));
@@ -133,22 +142,25 @@ const RecursiveMobileDropdown = ({ links, depth = 0 }) => {
       {links.map((sublink, i) => (
         <li key={i}>
           <div className="flex justify-between items-center p-2 hover:bg-gray-100">
-            <Link href={sublink.fullSlug}>{sublink.title}</Link>
+            
+            {/* ✅ fixed */}
+            <NewTabLink href={sublink.fullSlug}>
+              {sublink.title}
+            </NewTabLink>
+
             {sublink.sublinks?.length > 0 && (
               <button onClick={() => toggle(i)}>
                 <FaChevronDown
-                  className={`text-sm transform transition ${
-                    open[i] ? "rotate-180" : "rotate-0"
+                  className={`text-sm transition ${
+                    open[i] ? "rotate-180" : ""
                   }`}
                 />
               </button>
             )}
           </div>
+
           {sublink.sublinks && open[i] && (
-            <RecursiveMobileDropdown
-              links={sublink.sublinks}
-              depth={depth + 1}
-            />
+            <RecursiveMobileDropdown links={sublink.sublinks} />
           )}
         </li>
       ))}
@@ -167,98 +179,77 @@ export default function Navbar({ categories }) {
 
   const dynamicNavLinks = navLinks.map((link) => {
     if (link.fullSlug === "/product-segment") {
-      return { ...link, sublinks: categories }; // categories = categoryTree
+      return { ...link, sublinks: categories };
     }
     return link;
   });
 
   return (
-    <nav className="flex items-center sticky top-0 justify-between py-4 px-10 max-md:px-4  bg-white z-[999] font-medium  h-24 max-md:h-20">
-      {/* Logo */}
-      <Link href={"/"} className="cursor-pointer">
-        <Image
-          src={images.Logo}
-          alt="Logo"
-          className="w-[216px] max-md:w-[150px]"
-        />
+    <nav className="flex items-center sticky top-0 justify-between py-4 px-10 bg-white z-[999] h-24">
+      
+      {/* Logo (same tab) */}
+      <Link href="/">
+        <Image src={images.Logo} alt="Logo" className="w-[216px]" />
       </Link>
 
-      {/* Desktop Navigation */}
+      {/* Desktop */}
       <div className="flex gap-1 items-center max-md:hidden">
-      <ul className="md:flex space-x-2 ">
-  {dynamicNavLinks.map((link, index) => (
-    <li
-      key={index}
-      className="relative px-4 py-2 rounded-md hover:bg-gray-100 transition duration-200"
-      onMouseEnter={() => setDropdownOpen(link.sublinks ? index : null)}
-      onMouseLeave={() => setDropdownOpen(null)}
-    >
-      <Link href={link.fullSlug} className="flex items-center gap-1">
-        {link.title}
-        {link.sublinks && (
-          <FaChevronDown
-            className={`text-sm transform transition ${
-              dropdownOpen === index ? "rotate-180" : "rotate-0"
-            }`}
-          />
-        )}
-      </Link>
+        <ul className="md:flex space-x-2">
+          {dynamicNavLinks.map((link, index) => (
+            <li
+              key={index}
+              className="relative px-4 py-2 hover:bg-gray-100"
+              onMouseEnter={() =>
+                setDropdownOpen(link.sublinks ? index : null)
+              }
+              onMouseLeave={() => setDropdownOpen(null)}
+            >
+              <Link href={link.fullSlug} className="flex items-center gap-1">
+                {link.title}
+                {link.sublinks && <FaChevronDown />}
+              </Link>
 
-      {/* Dropdown */}
-      <AnimatePresence>
-        {dropdownOpen === index && link.sublinks?.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="absolute left-0"
-          >
-            <RecursiveDropdown links={link.sublinks} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </li>
-  ))}
-</ul>
+              <AnimatePresence>
+                {dropdownOpen === index && link.sublinks && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute left-0"
+                  >
+                    <RecursiveDropdown links={link.sublinks} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </li>
+          ))}
+        </ul>
 
         <Search />
       </div>
 
-      {/* Mobile Hamburger Menu */}
+      {/* Mobile */}
       <div className="md:hidden flex gap-3">
         <Search />
         <button onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? (
-            <RxCross1 className="w-6 h-6" />
-          ) : (
-            <CiMenuBurger className="w-6 h-6" />
-          )}
+          {isOpen ? <RxCross1 /> : <CiMenuBurger />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-20 left-0 w-full bg-white shadow-md md:hidden max-h-[400px] overflow-y-auto"
-          >
+          <motion.div className="absolute top-20 left-0 w-full bg-white shadow-md md:hidden">
             <ul className="flex flex-col p-4 space-y-4">
               {dynamicNavLinks.map((link, index) => (
                 <li key={index}>
                   <div className="flex justify-between items-center p-2 hover:bg-gray-100">
-                    <Link onClick={() => setIsOpen(false)} href={link.fullSlug}>
-                      {link.title}
-                    </Link>
-                    {link.sublinks?.length > 0 && (
+                    
+                    {/* keep main nav same tab */}
+                    <Link href={link.fullSlug}>{link.title}</Link>
+
+                    {link.sublinks && (
                       <button onClick={() => toggleMobileDropdown(index)}>
-                        <FaChevronDown
-                          className={`text-sm transform transition ${
-                            mobileDropdown[index] ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
+                        <FaChevronDown />
                       </button>
                     )}
                   </div>
