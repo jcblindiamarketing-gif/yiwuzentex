@@ -69,41 +69,47 @@ function FormModal({
     return true;
   };
 
-  const handleSubmit = async (e) => {
-    setLoading(false);
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setLoading(true);
-    try {
-      if (validateForm(e)) {
-        const result = await axios.post("/api/send-email", {
-          name: formData.name,
-          clientEmail: formData.email,
-          phone: formData.phone,
-          catalogueLink:
-            selectedCatalogue.url || selectedCatalogue.catalogueUrl,
-          subject: `Thankyou for your interest in Zentrex | Here is your Catalogue for ${selectedCatalogue.name || selectedCatalogue.title}`,
-          website: window.location.hostname,
-        });
+  console.log("🔥 FORM SUBMIT CLICKED");
 
-        console.log("result", result);
+  if (!validateForm()) return;
 
-        if (result?.data.success === true) {
-          notify("Email sent successfully");
-          setFormData({ name: "", email: "", phone: "" });
-          closeForm();
-        } else {
-          notify("Something went wrong, please try again");
-        }
-      }
-    } catch (error) {
-      notify("Something went wrong, please try again");
-      console.error("Error sending email:", error);
-    } finally {
-      setLoading(false);
+  setLoading(true);
+
+  try {
+    console.log("📡 CALLING API...");
+
+    const result = await axios.post("/api/send-email", {
+      name: formData.name,
+      clientEmail: formData.email,
+      phone: formData.phone,
+      catalogueLink:
+        selectedCatalogue.url || selectedCatalogue.catalogueUrl,
+      subject: `Thankyou for your interest in Zentrex | Here is your Catalogue for ${
+        selectedCatalogue.name || selectedCatalogue.title
+      }`,
+      website: window.location.hostname,
+    });
+
+    console.log("✅ API RESPONSE:", result?.data);
+
+    if (result?.data?.success) {
+      notify("Email sent successfully ✅");
+      setFormData({ name: "", email: "", phone: "" });
+      closeForm();
+    } else {
+      notify("API responded but failed ❌");
     }
-  };
 
+  } catch (error) {
+    console.error("❌ FRONTEND ERROR:", error);
+    notify("Something went wrong ❌");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <>
       <Toaster />
