@@ -76,7 +76,7 @@ function FormModal({
     setLoading(true);
     try {
       if (validateForm(e)) {
-        const result = await axios.post(process.env.NEXT_PUBLIC_API_EMAIL_URL, {
+        const result = await axios.post("/api/send-email", {
           name: formData.name,
           clientEmail: formData.email,
           phone: formData.phone,
