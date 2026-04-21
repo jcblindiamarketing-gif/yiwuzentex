@@ -22,16 +22,16 @@ export async function POST(req) {
     }
 
     // ✅ FIX: Use explicit SMTP config (more reliable than "service")
-  const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+const transporter = nodemailer.createTransport({
+  host: "smtp.zoho.in",
   port: 587,
-  secure: false, // ✅ MUST be false for 587
+  secure: false, // ✅ IMPORTANT
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
-    rejectUnauthorized: false, // ✅ fix SSL issue
+    rejectUnauthorized: false, // ✅ prevents SSL issues
   },
 });
 
