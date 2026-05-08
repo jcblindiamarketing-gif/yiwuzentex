@@ -58,7 +58,7 @@ function ProductInfo({ data }) {
 
           {data?.specifications && (
             <div className="pt-4 prose max-w-none portable-text">
-              <PortableText value={data.specifications} />
+              <PortableText value={{ __html: data.specifications }} />
             </div>
           )}
 
