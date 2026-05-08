@@ -41,14 +41,14 @@ const components = {
     /<table/g,
     '<table style="width:100%; border-collapse:collapse; min-width:1200px; font-size:14px;"'
   )
-  .replace(
-    /<th/g,
-    '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center;"'
-  )
-  .replace(
-    /<td/g,
-    '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle;"'
-  );
+.replace(
+  /<th>/g,
+  '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center;">'
+)
+.replace(
+  /<td>/g,
+  '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle;">'
+);
 
       return (
         <div
