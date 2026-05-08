@@ -58,16 +58,11 @@ export const productType = defineType({
         }),
 
 
-        defineField({
-            name: 'specifications',
-            title: 'Specifications',
-            type: 'array',
-            of: [
-                defineArrayMember({
-                    type: 'block',
-                }),
-            ],
-        }),
+       defineField({
+  name: 'specifications',
+  title: 'Specifications',
+  type: 'text',
+}),
 
         defineField({
             name: 'mainParent',
