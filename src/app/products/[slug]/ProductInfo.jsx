@@ -25,13 +25,18 @@ function ProductInfo({ data }) {
 const components = {
   marks: {
     code: ({ children }) => {
-      const content = Array.isArray(children) ? children.join("") : children;
+      const content = children
+        .map((child) => {
+          if (typeof child === "string") return child;
+          if (child?.props?.children) return child.props.children;
+          return "";
+        })
+        .join("");
 
       const decodedHtml = content
         .replace(/&lt;/g, "<")
         .replace(/&gt;/g, ">")
-        .replace(/&amp;/g, "&")
-        .replace(/<br\s*\/?>/g, "");
+        .replace(/&amp;/g, "&");
 
       return (
         <div
@@ -42,8 +47,6 @@ const components = {
     },
   },
 };
-
-     
 
   return (
     <>
