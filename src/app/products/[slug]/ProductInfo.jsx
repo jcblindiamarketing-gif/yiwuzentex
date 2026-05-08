@@ -56,10 +56,18 @@ function ProductInfo({ data }) {
           <h1 className="text-4xl font-bold text-[#10797C]">{data.name}</h1>
           <p className="text-gray-700 text-lg">{data.description}</p>
 
-        {data?.specifications && (
+    {console.log("specifications:", data?.specifications)}
+{console.log("type:", typeof data?.specifications)}
+
+{data?.specifications && (
   <div
     className="pt-4 prose max-w-none portable-text overflow-x-auto"
-    dangerouslySetInnerHTML={{ __html: data.specifications }}
+    dangerouslySetInnerHTML={{
+      __html:
+        typeof data.specifications === "string"
+          ? data.specifications
+          : "",
+    }}
   />
 )}
 
