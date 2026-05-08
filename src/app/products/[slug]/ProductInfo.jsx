@@ -13,13 +13,34 @@ function ProductInfo({ data }) {
   const formRef = useRef(null);
   const [formVisible, setFormVisible] = useState(false);
 
-
-
-  const [images, setImages] = useState([data.image, ...Array.isArray(data?.otherImages) ? data?.otherImages : []]);
+  const [images, setImages] = useState([
+    data.image,
+    ...Array.isArray(data?.otherImages) ? data?.otherImages : []
+  ]);
 
   console.log("images", images);
 
   const openForm = () => setFormVisible(true);
+
+  // PASTE HERE
+  const components = {
+    block: {
+      normal: ({ children }) => {
+        const content = children?.[0]?.text || "";
+
+        if (content.includes("<table")) {
+          return (
+            <div
+              className="overflow-x-auto"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+          );
+        }
+
+        return <p>{children}</p>;
+      },
+    },
+  };
 
   return (
     <>
@@ -56,19 +77,9 @@ function ProductInfo({ data }) {
           <h1 className="text-4xl font-bold text-[#10797C]">{data.name}</h1>
           <p className="text-gray-700 text-lg">{data.description}</p>
 
-    {console.log("specifications:", data?.specifications)}
-{console.log("type:", typeof data?.specifications)}
-
-{data?.specifications && (
-  <div
-    className="pt-4 prose max-w-none portable-text overflow-x-auto"
-    dangerouslySetInnerHTML={{
-      __html:
-        typeof data.specifications === "string"
-          ? data.specifications
-          : "",
-    }}
-  />
+ {data?.specifications && (
+  <div className="pt-4 prose max-w-none portable-text overflow-x-auto">
+<PortableText value={data.specifications} components={components} />  </div>
 )}
 
           <div className="flex gap-2 justify-between border border-gray-200 rounded-md px-4 py-7 items-center max-md:flex-col max-md:justify-start max-md:items-start max-md:gap-5 ">
