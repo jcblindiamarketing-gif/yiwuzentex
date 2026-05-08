@@ -22,25 +22,28 @@ function ProductInfo({ data }) {
 
   const openForm = () => setFormVisible(true);
 
-  // PASTE HERE
-  const components = {
-    block: {
-      normal: ({ children }) => {
-        const content = children?.[0]?.text || "";
+const components = {
+  marks: {
+    code: ({ children }) => {
+      const content = Array.isArray(children) ? children.join("") : children;
 
-        if (content.includes("<table")) {
-          return (
-            <div
-              className="overflow-x-auto"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
-          );
-        }
+      const decodedHtml = content
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(/<br\s*\/?>/g, "");
 
-        return <p>{children}</p>;
-      },
+      return (
+        <div
+          className="overflow-x-auto"
+          dangerouslySetInnerHTML={{ __html: decodedHtml }}
+        />
+      );
     },
-  };
+  },
+};
+
+     
 
   return (
     <>
