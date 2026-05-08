@@ -56,11 +56,12 @@ function ProductInfo({ data }) {
           <h1 className="text-4xl font-bold text-[#10797C]">{data.name}</h1>
           <p className="text-gray-700 text-lg">{data.description}</p>
 
-          {data?.specifications && (
-            <div className="pt-4 prose max-w-none portable-text">
-              <PortableText value={{ __html: data.specifications }} />
-            </div>
-          )}
+        {data?.specifications && (
+  <div
+    className="pt-4 prose max-w-none portable-text overflow-x-auto"
+    dangerouslySetInnerHTML={{ __html: data.specifications }}
+  />
+)}
 
           <div className="flex gap-2 justify-between border border-gray-200 rounded-md px-4 py-7 items-center max-md:flex-col max-md:justify-start max-md:items-start max-md:gap-5 ">
             <div className="flex gap-2 max-sm:flex-col">
