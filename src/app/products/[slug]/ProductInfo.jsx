@@ -22,28 +22,39 @@ function ProductInfo({ data }) {
 
   const openForm = () => setFormVisible(true);
 
-const decodedHtml = content
-  .replace(/&lt;/g, "<")
-  .replace(/&gt;/g, ">")
-  .replace(/&amp;/g, "&")
-  .replace(
-    /<table/g,
-    '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
-  )
-  .replace(
-    /<th>/g,
-    '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
-  )
-  .replace(
-    /<td>/g,
-    '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle; white-space:nowrap;">'
-  );
+const components = {
+  marks: {
+    code: ({ children }) => {
+      const content = children
+        .map((child) => {
+          if (typeof child === "string") return child;
+          if (child?.props?.children) return child.props.children;
+          return "";
+        })
+        .join("");
 
-return (
-  <div className="table-scroll-wrapper">
-    <div dangerouslySetInnerHTML={{ __html: decodedHtml }} />
-  </div>
-);
+      const decodedHtml = content
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(
+          /<table/g,
+          '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
+        )
+        .replace(
+          /<th>/g,
+          '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
+        )
+        .replace(
+          /<td>/g,
+          '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle; white-space:nowrap;">'
+        );
+
+      return (
+        <div className="table-scroll-wrapper">
+          <div dangerouslySetInnerHTML={{ __html: decodedHtml }} />
+        </div>
+      );
     },
   },
 };
