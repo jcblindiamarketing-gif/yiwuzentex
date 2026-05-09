@@ -148,4 +148,18 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.table-scroll-wrapper {
+  width: 100%;
+}
 
+@media (max-width: 768px) {
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll-wrapper table {
+    min-width: 1200px;
+    width: max-content;
+  }
+}
