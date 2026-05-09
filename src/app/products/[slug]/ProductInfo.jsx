@@ -33,33 +33,31 @@ const components = {
         })
         .join("");
 
-     const decodedHtml = content
-  .replace(/&lt;/g, "<")
-  .replace(/&gt;/g, ">")
-  .replace(/&amp;/g, "&")
-  .replace(
-    /<table/g,
-    '<table style="width:100%; border-collapse:collapse; min-width:1200px; font-size:14px;"'
-  )
-.replace(
-  /<th>/g,
-  '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center;">'
-)
-.replace(
-  /<td>/g,
-  '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle;">'
-);
+      const decodedHtml = content
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&amp;/g, "&")
+        .replace(
+          /<table/g,
+          '<table style="width:max-content; min-width:100%; border-collapse:collapse; font-size:14px;"'
+        )
+        .replace(
+          /<th>/g,
+          '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
+        )
+        .replace(
+          /<td>/g,
+          '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle; white-space:nowrap;">'
+        );
 
       return (
-        <div
-          className="overflow-x-auto"
-          dangerouslySetInnerHTML={{ __html: decodedHtml }}
-        />
+        <div className="w-full overflow-x-auto">
+          <div dangerouslySetInnerHTML={{ __html: decodedHtml }} />
+        </div>
       );
     },
   },
 };
-
   return (
     <>
       <div className="grid md:grid-cols-2 gap-10 items-start">
