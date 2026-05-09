@@ -148,28 +148,4 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
-@media (max-width: 768px) {
-  .portable-text,
-  .portable-text p,
-  .portable-text > div,
-  .portable-text div {
-    overflow-x: auto !important;
-    max-width: 100% !important;
-    display: block !important;
-    -webkit-overflow-scrolling: touch;
-  }
 
-  .portable-text table {
-    min-width: 1200px !important;
-    width: max-content !important;
-  }
-
-  .portable-text th,
-  .portable-text td {
-    white-space: nowrap !important;
-  }
-    .portable-text .w-full.overflow-x-auto > div {
-    overflow-x: auto !important;
-
-  }
-}
