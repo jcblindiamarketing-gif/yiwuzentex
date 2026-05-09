@@ -148,3 +148,21 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+@media (max-width: 768px) {
+    .portable-text {
+        display: block !important;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .portable-text table {
+        width: max-content !important;
+        min-width: 100%;
+    }
+
+    .portable-text th,
+    .portable-text td {
+        white-space: nowrap;
+    }
+}
