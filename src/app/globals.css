@@ -149,20 +149,23 @@ body {
   scrollbar-width: none; /* Firefox */
 }
 @media (max-width: 768px) {
-    .portable-text {
-        display: block !important;
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+  .portable-text,
+  .portable-text p,
+  .portable-text > div,
+  .portable-text div {
+    overflow-x: auto !important;
+    max-width: 100% !important;
+    display: block !important;
+    -webkit-overflow-scrolling: touch;
+  }
 
-    .portable-text table {
-        width: max-content !important;
-        min-width: 100%;
-    }
+  .portable-text table {
+    min-width: 1200px !important;
+    width: max-content !important;
+  }
 
-    .portable-text th,
-    .portable-text td {
-        white-space: nowrap;
-    }
+  .portable-text th,
+  .portable-text td {
+    white-space: nowrap !important;
+  }
 }
