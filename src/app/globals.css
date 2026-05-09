@@ -168,4 +168,8 @@ body {
   .portable-text td {
     white-space: nowrap !important;
   }
+    .portable-text .w-full.overflow-x-auto > div {
+    overflow-x: auto !important;
+
+  }
 }
