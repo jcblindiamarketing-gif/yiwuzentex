@@ -51,7 +51,7 @@ const components = {
         );
 
       return (
-        <div className="w-full overflow-x-auto">
+        <div className="table-scroll-wrapper">
           <div dangerouslySetInnerHTML={{ __html: decodedHtml }} />
         </div>
       );
@@ -94,7 +94,7 @@ const components = {
           <p className="text-gray-700 text-lg">{data.description}</p>
 
  {data?.specifications && (
-  <div className="pt-4 prose max-w-none portable-text overflow-x-auto">
+  <div className="pt-4 prose max-w-none portable-text">
 <PortableText value={data.specifications} components={components} />  </div>
 )}
 
