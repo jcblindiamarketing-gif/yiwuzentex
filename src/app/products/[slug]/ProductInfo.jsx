@@ -42,13 +42,13 @@ const components = {
           '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
         )
         .replace(
-          /<th>/g,
-          '<th style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
-        )
-        .replace(
-          /<td>/g,
-          '<td style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle; white-space:nowrap;">'
-        );
+  /<th([^>]*)>/g,
+  '<th$1 style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
+)
+       .replace(
+  /<td([^>]*)>/g,
+  '<td$1 style="border:1px solid #d1d5db; padding:10px; text-align:center; vertical-align:middle; white-space:nowrap;">'
+);
 
       return (
         <div className="table-scroll-wrapper">
