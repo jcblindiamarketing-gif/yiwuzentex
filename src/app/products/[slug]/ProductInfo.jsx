@@ -39,7 +39,7 @@ const components = {
         .replace(/&amp;/g, "&")
         .replace(
           /<table/g,
-          '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
+          '<table style="min-width:420px; border-collapse:collapse; font-size:14px;"'
         )
         .replace(
   /<th([^>]*)>/g,
