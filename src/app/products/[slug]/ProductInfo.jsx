@@ -37,10 +37,12 @@ const components = {
         .replace(/&lt;/g, "<")
         .replace(/&gt;/g, ">")
         .replace(/&amp;/g, "&")
-        .replace(
-          /<table/g,
-          '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
-        )
+      .replace(
+  /<table/g,
+  content.includes("90/90-14")
+    ? '<table style="width:auto; max-width:400px; border-collapse:collapse; font-size:14px;"'
+    : '<table style="min-width:1200px; border-collapse:collapse; font-size:14px;"'
+)
         .replace(
   /<th([^>]*)>/g,
   '<th$1 style="border:1px solid #d1d5db; padding:12px; background:#0f766e; color:white; text-align:center; white-space:nowrap;">'
