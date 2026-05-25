@@ -36,10 +36,10 @@ export default function ProductClient({ product }) {
     console.log("product", product);
 
 
-    const data = await client.fetch(
-      `*[_type == "product" && category._ref == $categoryId && slug.current != $slug] 
-      | order(_createdAt desc) 
-      [$start...$end] {
+  const data = await client.fetch(
+  `*[_type == "product" && category._ref == $categoryId && slug.current != $slug] 
+  | order(name asc) 
+  [$start...$end] {
         _id,
         name,
         slug,
@@ -54,7 +54,14 @@ export default function ProductClient({ product }) {
       }
     );
 
-    setSimilarProducts((prev) => [...prev, ...data]);
+ setSimilarProducts((prev) =>
+  [...prev, ...data].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, {
+      numeric: true,
+      sensitivity: "base",
+    })
+  )
+);
     setPage((prev) => prev + 1);
     if (data.length < pageSize) setHasMore(false);
 
