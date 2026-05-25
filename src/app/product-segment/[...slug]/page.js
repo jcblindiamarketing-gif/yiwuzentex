@@ -40,7 +40,16 @@ async function getProductsForCategory(categoryId) {
         specifications
       }
     `;
-        return await client.fetch(query, { categoryId });
+       const products = await client.fetch(query, { categoryId });
+
+const sortedProducts = [...products].sort((a, b) =>
+  (a.name || "").localeCompare(b.name || "", undefined, {
+    numeric: true,
+    sensitivity: "base",
+  })
+);
+
+return sortedProducts;
     } catch (error) {
         console.error("❌ Error fetching products:", error.message);
         return [];
