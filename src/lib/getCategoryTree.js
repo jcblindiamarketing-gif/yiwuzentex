@@ -43,55 +43,47 @@ export async function getCategoryTree() {
   const categories = await client.fetch(query);
 
   const categoryMap = new Map();
+  const roots = [];
 
-  // 🔧 helper to clean slug (-2 issue)
   const cleanSlug = (slug) => slug?.replace(/-\d+$/, "");
 
-  // Step 1: prepare nodes
   categories.forEach((cat) => {
     categoryMap.set(cat._id, {
       ...cat,
       sublinks: [],
-      fullSlug: "",
       newTab: false,
     });
   });
 
-  const roots = [];
-
-  // Step 2: build tree
   categories.forEach((cat) => {
-  const node = categoryMap.get(cat._id);
+    const node = categoryMap.get(cat._id);
 
-  const isExternal = cat.slug?.startsWith("http");
-
-  // ✅ handle external slug
-  if (isExternal) {
-    node.fullSlug = cat.slug;
-    node.newTab = true;
-  }
-
-  if (cat.parent) {
-    const parent = categoryMap.get(cat.parent);
-
-    if (parent) {
-      parent.sublinks.push(node);
-
-      // ✅ ONLY build slug if NOT external
-      if (!isExternal) {
-        node.fullSlug = parent.fullSlug
-          ? `${parent.fullSlug}/${cleanSlug(cat.slug)}`
-          : `/product-segment/${cleanSlug(cat.slug)}`;
+    if (cat.parent) {
+      const parent = categoryMap.get(cat.parent);
+      if (parent) {
+        parent.sublinks.push(node);
       }
+    } else {
+      roots.push(node);
     }
-  } else {
-    if (!isExternal) {
-      node.fullSlug = `/product-segment/${cleanSlug(cat.slug)}`;
+  });
+
+  const buildFullSlug = (node, parentPath = "/product-segment") => {
+    const isExternal = node.slug?.startsWith("http");
+
+    if (isExternal) {
+      node.fullSlug = node.slug;
+      node.newTab = true;
+    } else {
+      node.fullSlug = `${parentPath}/${cleanSlug(node.slug)}`;
     }
-    roots.push(node);
-  }
-});
+
+    node.sublinks.forEach((child) =>
+      buildFullSlug(child, node.fullSlug)
+    );
+  };
+
+  roots.forEach((root) => buildFullSlug(root));
 
   return roots;
 }
-
