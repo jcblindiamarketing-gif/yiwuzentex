@@ -16,7 +16,6 @@ import Search from "../Search/Search";
 const NewTabLink = ({ href, children, className }) => (
   <Link
     href={href}
-    target="_blank"
     rel="noopener noreferrer"
     className={className}
   >
