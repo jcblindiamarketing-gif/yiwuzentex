@@ -21,31 +21,45 @@ export default function ContactPage() {
 
   const notify = (msg) => toast(msg);
 
-  const handleFormSubmit = async (e) => {
-    setIsLoading(false);
-    e.preventDefault();
-    // Handle form submission logic here
+ const handleFormSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!contactForm.name || !contactForm.email || !contactForm.message || !contactForm.phone) {
-      notify("All fields are required");
-      return;
-    }
+  if (
+    !contactForm.name ||
+    !contactForm.email ||
+    !contactForm.message ||
+    !contactForm.phone
+  ) {
+    notify("All fields are required");
+    return;
+  }
 
+  try {
     setIsLoading(true);
-    // Send form data to server
-    const { data } = await axios.post(process.env.NEXT_PUBLIC_CONTACT_API_URL, { ...contactForm, website: window.location.hostname });
+
+    const { data } = await axios.post("/api/send-email", {
+      ...contactForm,
+      website: window.location.hostname,
+    });
 
     if (data.success) {
       notify(data.message);
-      setContactForm({ name: "", email: "", message: "", phone: "" });
-      setIsLoading(false);
+      setContactForm({
+        name: "",
+        email: "",
+        message: "",
+        phone: "",
+      });
+    } else {
+      notify(data.message || "Something went wrong");
     }
-    else {
-      notify(data.message || "Something went wrong, please try again");
-      setIsLoading(false);
-    }
-
-  };
+  } catch (error) {
+    console.error(error);
+    notify("Request failed");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <>
