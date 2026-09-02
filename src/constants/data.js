@@ -50,31 +50,32 @@ export const ServicesInfo = [
 ]
 
 
-
 export const ProductsInfo = [
     {
         id: 1,
-        title: "Automotive",
-        image : images.Automotive,
-        slug : "auto"
+        title: "Automobile Tyres",
+        image: images.Automotive,
+        slug: "automobile-tyres"
     },
 
-    // {
-    //     id: 2,
-    //     title: "Agriculture",
-    //     image : images.Agri,
-    //     slug : "agri"
+    {
+        id: 2,
+        title: "Batteries",
+        image: images.Automotive,
+        slug: "batteries"
+    },
 
-
-    // },
     {
         id: 3,
-        title: "Hardware & Tools",
-        image : images.Hardware,
-        slug : "hardware-tools"
-
+        title: "Auto Parts",
+        image: images.Automotive,
+        slug: "auto"
     },
-  
+
+    {
+        id: 4,
+        title: "Hardware & Tools",
+        image: images.Hardware,
+        slug: "hardware-tools"
+    },
 ]
-
-
