@@ -22,14 +22,14 @@ export const navLinks = [
                             { title: "PCR Tyres", fullSlug: "/product-segment/auto/automobile-tyres/pcr" },
                         ],
                     },
-                    {
-                        title: "Automotive Batteries",
-                        fullSlug: "/product-segment/auto/automotive-batteries",
-                        sublinks: [
-                            { title: "Motorcycle Batteries", fullSlug: "/product-segment/auto/automotive-batteries/motorcycle" },
-                            { title: "Car Batteries", fullSlug: "/product-segment/auto/automotive-batteries/car" },
-                        ]
-                    },
+                    // {
+                    //     title: "Automotive Batteries",
+                    //     fullSlug: "/product-segment/auto/automotive-batteries",
+                    //     sublinks: [
+                    //         { title: "Motorcycle Batteries", fullSlug: "/product-segment/auto/automotive-batteries/motorcycle" },
+                    //         { title: "Car Batteries", fullSlug: "/product-segment/auto/automotive-batteries/car" },
+                    //     ]
+                    // },
                     { title: "Lubricants", fullSlug: "/product-segment/auto/lubricants" },
                 ],
             },
