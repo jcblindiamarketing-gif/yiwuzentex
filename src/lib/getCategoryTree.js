@@ -40,8 +40,9 @@ const query = groq`
 // }
 
 export async function getCategoryTree() {
-  const categories = await client.fetch(query);
-
+const categories = await client.fetch(query, {}, {
+  cache: "no-store",
+});
   const categoryMap = new Map();
   const roots = [];
 
