@@ -94,43 +94,57 @@ const Footer = () => {
           </div>
 
           {/* Column 3: Products */}
-          <div className="md:border-r md:border-[#48D1CC] pr-0 md:pr-4 w-full md:w-1/4  md:text-left">
-            <h3 className="font-bold mb-3 text-xl">Products</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/product-segment/auto"
-                  className="hover:underline  hover:text-[#48D1CC] transition-colors ease-in duration-200"
-                >
-                  Auto
-                </Link>
-              </li>
-              {/* <li>
-                <Link
-                  href="/product-segment/agri"
-                  className="hover:underline  hover:text-[#48D1CC] transition-colors ease-in duration-200"
-                >
-                  Agri
-                </Link>
-              </li> */}
-              <li>
-                <Link
-                  href="/product-segment/hardware-tools"
-                  className="hover:underline  hover:text-[#48D1CC] transition-colors ease-in duration-200"
-                >
-                  Hardware & Tools
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/product-catalogues"
-                  className="hover:underline  hover:text-[#48D1CC] transition-colors ease-in duration-200"
-                >
-                  Product Catalogues
-                </Link>
-              </li>
-            </ul>
-          </div>
+        {/* Column 3: Products */}
+<div className="md:border-r md:border-[#48D1CC] pr-0 md:pr-4 w-full md:w-1/4 md:text-left">
+  <h3 className="font-bold mb-3 text-xl">Products</h3>
+
+  <ul className="space-y-2">
+    <li>
+      <Link
+        href="/product-segment/automobile-tyres"
+        className="hover:underline hover:text-[#48D1CC] transition-colors ease-in duration-200"
+      >
+        Automobile Tyres
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        href="/product-segment/batteries"
+        className="hover:underline hover:text-[#48D1CC] transition-colors ease-in duration-200"
+      >
+        Batteries
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        href="/product-segment/auto"
+        className="hover:underline hover:text-[#48D1CC] transition-colors ease-in duration-200"
+      >
+        Auto Parts
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        href="/product-segment/hardware-tools"
+        className="hover:underline hover:text-[#48D1CC] transition-colors ease-in duration-200"
+      >
+        Hardware & Tools
+      </Link>
+    </li>
+
+    <li>
+      <Link
+        href="/product-catalogues"
+        className="hover:underline hover:text-[#48D1CC] transition-colors ease-in duration-200"
+      >
+        Product Catalogues
+      </Link>
+    </li>
+  </ul>
+</div>
 
           {/* Column 4: Connect */}
           <div className="w-full md:w-fit  md:text-left">
