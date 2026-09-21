@@ -1,86 +1,294 @@
+
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
-  console.log("🔥 API HIT");
+  console.log("🔥 SEND EMAIL API HIT");
 
   try {
+    // =====================================================
+    // 1. READ REQUEST BODY
+    // =====================================================
     const body = await req.json();
-  const { name, email, catalogueLink, subject } = body;
 
-const clientEmail = email;
+    console.log("📥 REQUEST BODY:", body);
 
-    console.log("EMAIL_USER:", process.env.EMAIL_USER);
-    console.log(
-      "EMAIL_PASS:",
-      process.env.EMAIL_PASS ? "EXISTS ✅" : "MISSING ❌"
-    );
+    const {
+      name,
+      clientEmail,
+      phone,
+      catalogueTitle,
+      catalogueLink,
+      subject,
+      website,
+    } = body;
 
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      return NextResponse.json({
-        success: false,
-        message: "Email config missing ❌",
-      });
+    // =====================================================
+    // 2. VALIDATE REQUIRED DATA
+    // =====================================================
+    if (!name || !clientEmail || !phone) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Name, email and phone are required.",
+        },
+        { status: 400 }
+      );
     }
 
-    // ✅ FIX: Use explicit SMTP config (more reliable than "service")
-const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.in",
-  port: 587,
-  secure: false, // ✅ IMPORTANT
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false, // ✅ prevents SSL issues
-  },
-});
+    if (!catalogueTitle) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Catalogue title is missing.",
+        },
+        { status: 400 }
+      );
+    }
 
-    // ❌ REMOVE verify() (can fail unnecessarily on some systems)
+    if (!catalogueLink) {
+      console.error("❌ CATALOGUE LINK IS MISSING");
 
-    const info = await transporter.sendMail({
-      from: `"Zentrex" <${process.env.EMAIL_USER}>`,
-      to: body.email,
-      subject: subject,
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Catalogue link is missing. Please check the catalogue data in Sanity.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // =====================================================
+    // 3. EMAIL CONFIG
+    // =====================================================
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+
+    console.log("📧 EMAIL USER:", emailUser);
+    console.log(
+      "🔐 EMAIL PASSWORD:",
+      emailPass ? "EXISTS ✅" : "MISSING ❌"
+    );
+
+    if (!emailUser || !emailPass) {
+      console.error("❌ EMAIL CONFIGURATION MISSING");
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Email configuration is missing.",
+        },
+        { status: 500 }
+      );
+    }
+
+    // =====================================================
+    // 4. CREATE SMTP TRANSPORTER
+    // =====================================================
+    const transporter = nodemailer.createTransport({
+      host: "smtp.zoho.in",
+      port: 587,
+      secure: false,
+
+      auth: {
+        user: emailUser,
+        pass: emailPass,
+      },
+
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+
+    // =====================================================
+    // 5. FINAL SUBJECT
+    // =====================================================
+    const finalSubject =
+      subject ||
+      `Request for ${catalogueTitle} Catalogue`;
+
+    console.log("📌 FINAL SUBJECT:", finalSubject);
+
+    // =====================================================
+    // 6. CLEAN CATALOGUE URL
+    // =====================================================
+    const finalCatalogueLink = String(catalogueLink).trim();
+
+    console.log(
+      "📎 FINAL CATALOGUE LINK:",
+      finalCatalogueLink
+    );
+
+    // =====================================================
+    // 7. SEND CATALOGUE TO CUSTOMER
+    // =====================================================
+    console.log(
+      "📨 Sending catalogue to customer:",
+      clientEmail
+    );
+
+    await transporter.sendMail({
+      from: `"Zentrex" <${emailUser}>`,
+
+      to: clientEmail,
+
+      subject: `Thank you for your interest in Zentrex | ${catalogueTitle} Catalogue`,
+
       html: `
-        <h2>Hello ${name}</h2>
-        <p>Thank you for your interest in Zentrex.</p>
-        <p><strong>Download your catalogue:</strong></p>
-        <a href="${catalogueLink}" target="_blank">
-          Click here to download
-        </a>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+
+          <h2 style="color: #10797C;">
+            Hello ${name},
+          </h2>
+
+          <p>
+            Thank you for your interest in Zentrex.
+          </p>
+
+          <p>
+            As requested, here is your catalogue:
+          </p>
+
+          <h3>
+            ${catalogueTitle}
+          </h3>
+
+          <p>
+            <a
+              href="${finalCatalogueLink}"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="
+                display: inline-block;
+                padding: 12px 20px;
+                background-color: #10797C;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 6px;
+              "
+            >
+              Download ${catalogueTitle} Catalogue
+            </a>
+          </p>
+
+          <p>
+            If you have any questions, please feel free to contact us.
+          </p>
+
+          <p>
+            Regards,<br />
+            <strong>Zentrex</strong>
+          </p>
+
+        </div>
       `,
     });
 
-// ✅ Second email: Notify the admin
-await transporter.sendMail({
-  from: `"Zentrex" <${process.env.EMAIL_USER}>`,
-  to: "vinod_kumar@jcblmail.com",
-  subject: "New Catalogue Request",
-  html: `
-    <h2>New User Enquiry</h2>
+    console.log("✅ CUSTOMER EMAIL SENT");
 
-    <p><strong>Name:</strong> ${name}</p>
+    // =====================================================
+    // 8. ADMIN / SALES LEAD EMAIL
+    // =====================================================
 
-    <p><strong>Email:</strong> ${clientEmail}</p>
+    // Temporary testing email
+    const leadEmail = "vinod_kumar@jcblmail.com";
 
-    <p>The user has requested the catalogue.</p>
-  `,
-});
+    console.log(
+      "📨 Sending lead notification to:",
+      leadEmail
+    );
 
+    await transporter.sendMail({
+      from: `"Zentrex Website" <${emailUser}>`,
 
-    return NextResponse.json({
-      success: true,
-      message: "Email sent ✅",
+      to: leadEmail,
+
+      subject: finalSubject,
+
+      html: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #333;">
+
+          <h2 style="color: #10797C;">
+            New Catalogue Request
+          </h2>
+
+          <hr />
+
+          <p>
+            <strong>Catalogue:</strong>
+            ${catalogueTitle}
+          </p>
+
+          <p>
+            <strong>Name:</strong>
+            ${name}
+          </p>
+
+          <p>
+            <strong>Email:</strong>
+            ${clientEmail}
+          </p>
+
+          <p>
+            <strong>Phone:</strong>
+            ${phone}
+          </p>
+
+          <p>
+            <strong>Website:</strong>
+            ${website || "Not provided"}
+          </p>
+
+          <p>
+            <strong>Catalogue URL:</strong>
+            <a
+              href="${finalCatalogueLink}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ${finalCatalogueLink}
+            </a>
+          </p>
+
+          <hr />
+
+          <p>
+            A visitor submitted a request for the catalogue
+            <strong>${catalogueTitle}</strong>.
+          </p>
+
+        </div>
+      `,
     });
+
+    console.log("✅ LEAD EMAIL SENT");
+
+    // =====================================================
+    // 9. SUCCESS RESPONSE
+    // =====================================================
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Catalogue email and lead notification sent successfully.",
+      },
+      { status: 200 }
+    );
 
   } catch (error) {
-    console.error("❌ MAIL ERROR FULL:", error);
+    // =====================================================
+    // 10. ERROR HANDLING
+    // =====================================================
+    console.error("❌ MAIL ERROR:", error);
 
-    return NextResponse.json({
-      success: false,
-      message: error.message || "Email failed ❌",
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          error?.message ||
+          "Failed to send email.",
+      },
+      { status: 500 }
+    );
   }
 }
