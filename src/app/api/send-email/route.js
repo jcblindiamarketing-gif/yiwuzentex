@@ -146,31 +146,13 @@ export async function POST(req) {
             Thank you for your interest in Zentrex.
           </p>
 
-          <p>
-            As requested, here is your catalogue:
-          </p>
+        <p>
+  We have successfully received your request for:
+</p>
 
-          <h3>
-            ${catalogueTitle}
-          </h3>
-
-          <p>
-            <a
-              href="${finalCatalogueLink}"
-              target="_blank"
-              rel="noopener noreferrer"
-              style="
-                display: inline-block;
-                padding: 12px 20px;
-                background-color: #10797C;
-                color: #ffffff;
-                text-decoration: none;
-                border-radius: 6px;
-              "
-            >
-              Download ${catalogueTitle} Catalogue
-            </a>
-          </p>
+<p>
+  Our team will get back to you shortly regarding your request.
+</p>
 
           <p>
             If you have any questions, please feel free to contact us.
