@@ -8,6 +8,7 @@ import Image from 'next/image'
 import React from 'react'
 import ProductsCards from "@/containers/PS/ProductsCards/ProductsCards"; // <-- create this component
 import ProductSegmentClient from './ProductSegmentClient'
+import ContactForm from "@/components/ContactForm/ContactForm";
 
 // Fetch subcategories of a given category
 async function getChildCategories(parentId) {
@@ -137,56 +138,63 @@ export default async function ProductSegmentPage({ params }) {
                 </div>
             </header>
 
-            <div className="app__container py-10">
+       <div className="app__container py-10">
 
-                <div>
+  <div className="flex flex-col lg:flex-row gap-10">
 
-                    <h1 className="text-5xl max-md:text-3xl font-semibold text-[#10797C] text-center mb-5">
-                        {mainCategory.title}
-                    </h1>
+    {/* ================= LEFT 70% ================= */}
+    <div className="w-full lg:w-[70%]">
 
-                    {/* Description */}
-                    {mainCategory.description && (
-                        <div className="portable-text mb-5">
-                            <PortableText value={mainCategory.description} />
-                        </div>
-                    )}
+      <div>
+        <h1 className="text-5xl max-md:text-3xl font-semibold text-[#10797C] text-center mb-5">
+          {mainCategory.title}
+        </h1>
 
+        {mainCategory.description && (
+          <div className="portable-text mb-5">
+            <PortableText value={mainCategory.description} />
+          </div>
+        )}
+      </div>
 
-                </div>
+      {/* Subcategories */}
+      {subCategories?.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 my-8">
+          {subCategories.map((category) => (
+            <CategoryCard
+              key={category._id}
+              category={category}
+              mainCategorySlug={mainCategory.slug}
+            />
+          ))}
+        </div>
+      )}
 
+      {/* Products */}
+      {products?.length > 0 && (
+        <ProductsCards products={products} />
+      )}
 
-                {/* Subcategories Of this category */}
-                {subCategories?.length > 0 && (
-                    <>
-                        {/* <h2 className="text-4xl text-center font-semibold text-[#10797C] my-8">Subcategories</h2> */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 my-8">
-                            {subCategories.map((category) => (
-                                <CategoryCard
-                                    key={category._id}
-                                    category={category}
-                                    mainCategorySlug={`${mainCategory.slug}`}
-                                />
-                            ))}
-                        </div>
-                    </>
-                )}
+      {/* Catalogue */}
+      {mainCategory.catalogueUrl && (
+        <ProductSegmentClient data={mainCategory} />
+      )}
 
-
-                {/* Products directly under this category */}
-                {products?.length > 0 && (
-                    <>
-                        {/* <h2 className="text-4xl text-center font-semibold text-[#10797C] mt-5 mb-14">Products</h2> */}
-                        <ProductsCards products={products} />
-                    </>
-                )}
-
-
-                {mainCategory.catalogueUrl && <ProductSegmentClient data={mainCategory} />}
+    </div>
 
 
-            </div>
+    {/* ================= RIGHT 30% ================= */}
+    <aside className="w-full lg:w-[30%]">
 
+      <div className="lg:sticky lg:top-24">
+        <ContactForm />
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>
 
 
         </>
