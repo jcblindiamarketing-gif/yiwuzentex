@@ -62,6 +62,15 @@ export const productCategory = defineType({
             },
         }),
 
+defineField({
+  name: 'categoryVideo',
+  title: 'Upload Category Video',
+  type: 'file',
+  options: {
+    accept: 'video/*',
+  },
+  description: 'Upload a video file from your computer',
+}),
         defineField({
             name: 'isActive',
             title: 'Is Active',
