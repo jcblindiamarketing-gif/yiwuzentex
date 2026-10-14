@@ -60,8 +60,7 @@ async function getProductsForCategory(categoryId) {
   }
 }
 
-// Fetch category details, products, subcategories,
-// catalogue PDF URL, and uploaded video URL
+// Fetch category details, products, and subcategories
 async function getCategoryData(slug) {
   try {
     const mainCategoryQuery = `
@@ -70,8 +69,7 @@ async function getCategoryData(slug) {
         title,
         "slug": slug.current,
         description,
-        "catalogueUrl": catalogue.asset->url,
-        "categoryVideoFileUrl": categoryVideo.asset->url
+        "catalogueUrl": catalogue.asset->url
       }
     `;
 
@@ -126,6 +124,10 @@ export default async function ProductSegmentPage({ params }) {
   }
 
   const { mainCategory, subCategories, products } = data;
+
+  // Show the local video only on the Batteries category
+  const showBatteriesVideo =
+    mainCategory.slug?.toLowerCase() === "batteries";
 
   return (
     <>
@@ -190,27 +192,30 @@ export default async function ProductSegmentPage({ params }) {
               <ProductSegmentClient data={mainCategory} />
             )}
 
-            {/* Uploaded category video */}
-            {mainCategory.categoryVideoFileUrl && (
-              <section className="mt-12 w-full">
-                <h2 className="text-2xl md:text-3xl font-semibold text-[#10797C] mb-5">
-                  {mainCategory.title} Video
-                </h2>
+         
+{/* Local Batteries video */}
+{showBatteriesVideo && (
+  <section className="mt-12 w-full">
+    <div className="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        controls
+        className="h-full w-full object-contain"
+      >
+        <source
+          src="/video/jcbl-batteries-video.mp4"
+          type="video/mp4"
+        />
+        Your browser does not support video playback.
+      </video>
+    </div>
+  </section>
+)}
 
-                <div className="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
-                  <video
-                    key={mainCategory.categoryVideoFileUrl}
-                    src={mainCategory.categoryVideoFileUrl}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-contain"
-                  >
-                    Your browser does not support video playback.
-                  </video>
-                </div>
-              </section>
-            )}
 
           </main>
 
