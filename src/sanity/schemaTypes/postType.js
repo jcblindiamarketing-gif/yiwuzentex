@@ -12,6 +12,31 @@ export const postType = defineType({
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
+
+    // SEO fields
+    defineField({
+      name: 'metaTitle',
+      title: 'SEO Meta Title',
+      type: 'string',
+      description: 'Custom SEO title for search engines. Recommended: 50–60 characters.',
+      validation: (Rule) =>
+        Rule.max(60).warning(
+          'Consider keeping the SEO title within 60 characters.'
+        ),
+    }),
+
+    defineField({
+      name: 'metaDescription',
+      title: 'SEO Meta Description',
+      type: 'text',
+      rows: 3,
+      description: 'Short description for search engine results. Recommended: 150–160 characters.',
+      validation: (Rule) =>
+        Rule.max(160).warning(
+          'Consider keeping the SEO description within 160 characters.'
+        ),
+    }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -22,6 +47,7 @@ export const postType = defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'mainImage',
       title: 'Main Image',
@@ -31,6 +57,7 @@ export const postType = defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'description',
       title: 'Content',
@@ -43,10 +70,10 @@ export const postType = defineType({
           type: 'image',
           options: { hotspot: true },
         }),
-
       ],
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'createdAt',
       title: 'Created At',
@@ -63,7 +90,10 @@ export const postType = defineType({
       media: 'mainImage',
     },
     prepare({ title, date, media }) {
-      const formattedDate = date ? new Date(date).toLocaleDateString() : 'No date'
+      const formattedDate = date
+        ? new Date(date).toLocaleDateString()
+        : 'No date'
+
       return {
         title,
         subtitle: `Created on ${formattedDate}`,

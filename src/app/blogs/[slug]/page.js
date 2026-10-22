@@ -8,22 +8,27 @@ import React from 'react';
 import { urlFor } from '@/sanity/lib/image';
 import ShareButton from '@/components/ShareButton/ShareButton';
 
+
 export async function generateMetadata({ params }) {
-    const { slug } = await params;
-    const blog = await fetchBlogBySlug(slug);
+  const { slug } = await params;
+  const blog = await fetchBlogBySlug(slug);
 
-    if (!blog) {
-        return {
-            title: 'Blog not found',
-            description: 'This blog post could not be found.',
-        };
-    }
-
+  if (!blog) {
     return {
-        title: blog.title,
-        description: blog?.excerpt || 'Read the full blog post',
+      title: 'Blog not found',
+      description: 'This blog post could not be found.',
     };
+  }
+
+  return {
+    title: blog.metaTitle || blog.title,
+    description:
+      blog.metaDescription ||
+      blog.excerpt ||
+      'Read the full blog post',
+  };
 }
+
 
 export default async function BlogDetailPage({ params }) {
     const { slug } = await params;

@@ -21,10 +21,13 @@ export async function fetchTotalBlogCount() {
   return client.fetch(`count(*[_type == "post"])`);
 }
 
+
 export async function fetchBlogBySlug(slug) {
   const query = `*[_type == "post" && slug.current == $slug][0] {
     _id,
     title,
+    metaTitle,
+    metaDescription,
     mainImage {
       asset-> {
         url
