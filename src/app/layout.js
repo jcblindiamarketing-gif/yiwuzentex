@@ -1,3 +1,4 @@
+
 import { Geist, Geist_Mono, Urbanist } from "next/font/google";
 import "react-phone-input-2/lib/style.css";
 import "./globals.css";
@@ -22,23 +23,80 @@ const urbanist = Urbanist({
   subsets: ["latin"],
 });
 
-// metadata API handles title, description, favicons, and Google verification
+const siteTitle = "Zentrex - Your Trusted Partner";
+
+const siteDescription =
+  "Zentrex provides cutting-edge solutions in supply chain management, product development, and more.";
+
+const siteUrl = "https://www.yiwuzentrex.com";
+
+const socialImage = "/og-image.jpg";
+
+// Global SEO and social sharing metadata
 export const metadata = {
-  title: "Zentrex - Your Trusted Partner",
-  description:
-    "Zentrex provides cutting-edge solutions in supply chain management, product development, and more.",
-  verification: {
-    google: "txn1pQuHmJj_tZiFlNitpgv4-ex54E2LNSiBjCfADEM", // Google Search Console
+  metadataBase: new URL(siteUrl),
+
+  title: {
+    default: siteTitle,
+    template: "%s | Zentrex",
   },
+
+  description: siteDescription,
+
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Zentrex",
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+    images: [
+      {
+        url: socialImage,
+        width: 1200,
+        height: 630,
+        alt: siteTitle,
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [
+      {
+        url: socialImage,
+        alt: siteTitle,
+      },
+    ],
+  },
+
+  verification: {
+    google: "txn1pQuHmJj_tZiFlNitpgv4-ex54E2LNSiBjCfADEM",
+  },
+
   icons: {
     icon: [
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", rel: "shortcut icon" },
+      {
+        url: "/favicon-96x96.png",
+        sizes: "96x96",
+        type: "image/png",
+      },
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/favicon.ico",
+        rel: "shortcut icon",
+      },
     ],
     apple: "/apple-touch-icon.png",
   },
+
   manifest: "/site.webmanifest",
+
   appleWebApp: {
     title: "Zentrex",
   },
@@ -69,6 +127,7 @@ export default function RootLayout({ children }) {
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-L140LLTMKG"
         />
+
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
