@@ -177,3 +177,11 @@ body {
     width: max-content !important;
   }
 }
+
+
+.blog-html table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.blog-html th, .blog-html td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+.blog-html th { background: #f3f4f6; font-weight: 600; }
+.blog-html blockquote { border-left: 4px solid #10797C; padding-left: 1rem; font-style: italic; margin: 1rem 0; color: #444; }
+.blog-html h2 { font-size: 1.6rem; }
+.blog-html h3 { font-size: 1.3rem; }

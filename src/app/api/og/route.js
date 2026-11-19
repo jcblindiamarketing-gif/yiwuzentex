@@ -9,30 +9,56 @@ const TEAL = "#10797C";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
 
-  const title = (searchParams.get("title") || "Zentrex")
-    .slice(0, 100);
-
+  const title = (searchParams.get("title") || "Zentrex").slice(0, 100);
   const description = (
     searchParams.get("description") ||
     "Your trusted partner in global sourcing and supply solutions."
   ).slice(0, 200);
 
-  let image = searchParams.get("image") || "";
+  let imageData = null;
 
-  // Only allow images hosted on the Sanity CDN.
+  const imageUrl = searchParams.get("image") || "";
+
+  // Only fetch images from the Sanity CDN.
   try {
-    if (image) {
-      const parsed = new URL(image);
+    if (imageUrl) {
+      const parsed = new URL(imageUrl);
 
       if (
-        parsed.protocol !== "https:" ||
-        parsed.hostname !== "cdn.sanity.io"
+        parsed.protocol === "https:" &&
+        parsed.hostname === "cdn.sanity.io"
       ) {
-        image = "";
+        const response = await fetch(parsed.toString(), {
+          headers: { Accept: "image/*" },
+        });
+
+        if (response.ok) {
+          const contentType = response.headers.get("content-type") || "";
+
+          if (
+            ["image/png", "image/jpeg", "image/webp"].includes(
+              contentType.split(";")[0].trim().toLowerCase()
+            )
+          ) {
+            const buffer = new Uint8Array(await response.arrayBuffer());
+
+            // Convert bytes to base64 without exceeding argument limits.
+            let binary = "";
+            const chunkSize = 8192;
+
+            for (let i = 0; i < buffer.length; i += chunkSize) {
+              binary += String.fromCharCode(
+                ...buffer.subarray(i, i + chunkSize)
+              );
+            }
+
+            imageData = `data:${contentType.split(";")[0]};base64,${btoa(binary)}`;
+          }
+        }
       }
     }
-  } catch {
-    image = "";
+  } catch (error) {
+    console.error("OG image fetch failed:", error);
   }
 
   return new ImageResponse(
@@ -49,7 +75,7 @@ export async function GET(request) {
       >
         <div
           style={{
-            width: image ? "66%" : "100%",
+            width: imageData ? "66%" : "100%",
             padding: "64px",
             display: "flex",
             flexDirection: "column",
@@ -99,10 +125,11 @@ export async function GET(request) {
           </div>
         </div>
 
-        {image ? (
+        {imageData && (
           <div
             style={{
               width: "34%",
+              height: "630px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -111,19 +138,18 @@ export async function GET(request) {
             }}
           >
             <img
-              src={image}
+              src={imageData}
               alt=""
-              width="330"
-              height="420"
+              width={330}
+              height={420}
               style={{
                 width: "100%",
-                height: "auto",
-                maxHeight: "420px",
+                height: "420px",
                 objectFit: "contain",
               }}
             />
           </div>
-        ) : null}
+        )}
       </div>
     ),
     {

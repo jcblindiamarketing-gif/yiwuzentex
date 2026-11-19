@@ -1,5 +1,4 @@
-
-import { defineType, defineField, defineArrayMember } from 'sanity'
+import { defineType, defineField } from 'sanity'
 
 export const postType = defineType({
   name: 'post',
@@ -111,20 +110,11 @@ export const postType = defineType({
       validation: (Rule) => Rule.required(),
     }),
 
-    // Blog content
+    // Blog content (uses blockContent, which has the HTML Block)
     defineField({
       name: 'description',
       title: 'Content',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'block',
-        }),
-        defineArrayMember({
-          type: 'image',
-          options: { hotspot: true },
-        }),
-      ],
+      type: 'blockContent',
       validation: (Rule) => Rule.required(),
     }),
 
